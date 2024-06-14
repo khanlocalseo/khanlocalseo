@@ -1,0 +1,47 @@
+trigger:
+  branches:
+    include:
+      - Khan Local SEO
+
+pr:
+  branches:
+    include:
+      - Khan Local SEO
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          # Install any dependencies your static site generator requires
+          # For example, if you're using Jekyll:
+          gem install bundler
+          bundle install
+
+      - name: Build site
+        run: |
+          # Build your static site
+          # For example, if you're using Jekyll:
+          bundle exec jekyll build
+
+      - name: Add blog post
+        run: |
+          echo "---" >> ./_posts/$(date +%Y-%m-%d)-boost-sales-and-leads.md
+          echo "layout: post" >> ./_posts/$(date +%Y-%m-%d)-boost-sales-and-leads.md
+          echo "title: How to Boost Sales and Leads by Up to 200%" >> ./_posts/$(date +%Y-%m-%d)-boost-sales-and-leads.md
+          echo "subtitle: We help businesses to get the highest ranking on search engine and eventually get a boost in sales and leads by up to 200%." >> ./_posts/$(date +%Y-%m-%d)-boost-sales-and-leads.md
+          echo "---" >> ./_posts/$(date +%Y-%m-%d)-boost-sales-and-leads.md
+          echo "" >> ./_posts/$(date +%Y-%m-%d)-boost-sales-and-leads.md
+          echo "Your blog content goes here." >> ./_posts/$(date +%Y-%m-%d)-boost-sales-and-leads.md
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site  # Adjust this according to your build output directory
+
